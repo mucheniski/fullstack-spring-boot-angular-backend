@@ -71,14 +71,22 @@
 			<version>3.4</version>	
 		</dependency>
 		
+		<!-- Autenticação Basic -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>	
 		</dependency>
 		
+		<!-- Autenticação OAuth2 -->
 		<dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>	
+		</dependency>
+		
+		<!-- Autenticação com JWT -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-jwt</artifactId>	
 		</dependency>
 			
 	</dependencies>
