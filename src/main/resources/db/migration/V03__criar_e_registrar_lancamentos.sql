@@ -17,9 +17,9 @@ INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, obser
 INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Academia', '2018-04-10', null, 120, null, 'DESPESA', 3, 3);
 INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Conta de luz', '2018-02-10', '2018-02-10', 110.44, null, 'DESPESA', 3, 4);
 INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Conta de água', '2018-02-15', null, 200.30, null, 'DESPESA', 3, 5);
-INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Restaurante', '2018-03-14', '2018-03-14', 1010.32, null, 'DESPESA', 4, 6);
+INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Restaurante', '2018-03-14', '2018-03-14', 1010.32, null, 'DESPESA', 4, 3);
 INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Venda vídeo game', '2018-01-01', null, 500, null, 'RECEITA', 1, 5);
-INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Clube', '2018-03-07', '2018-03-05', 400.32, null, 'DESPESA', 4, 6);
+INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Clube', '2018-03-07', '2018-03-05', 400.32, null, 'DESPESA', 4, 3);
 INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Impostos', '2018-04-10', null, 123.64, 'Multas', 'DESPESA', 3, 3);
 INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Multa', '2018-04-10', null, 665.33, null, 'DESPESA', 5, 4);
 INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Padaria', '2018-02-28', '2018-02-28', 8.32, null, 'DESPESA', 1, 5);
