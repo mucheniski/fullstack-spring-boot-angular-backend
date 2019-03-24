@@ -8,7 +8,7 @@ import com.example.algamoney.api.config.property.AlgamoneyApiProperty;
 
 @SpringBootApplication
 @EnableConfigurationProperties(AlgamoneyApiProperty.class)
-public class AlgamoneyApiApplication {
+public class AlgamoneyApiApplication { 
 
 	public static void main(String[] args) {
 		SpringApplication.run(AlgamoneyApiApplication.class, args);
