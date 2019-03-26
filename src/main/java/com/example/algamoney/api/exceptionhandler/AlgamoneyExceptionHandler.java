@@ -61,6 +61,14 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 	
+	@ExceptionHandler({ IllegalArgumentException.class })
+	private ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request){
+		String mensagemUsuario = messageSource.getMessage("lancamento.erro-atuaizacao", null, LocaleContextHolder.getLocale());
+		String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+	
 	private List<Erro> criarListaDeErros(BindingResult bindingResult) {
 		List<Erro> erros = new ArrayList<>();
 		
