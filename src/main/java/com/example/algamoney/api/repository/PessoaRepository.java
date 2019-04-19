@@ -9,5 +9,7 @@ import com.example.algamoney.api.model.Pessoa;
 public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
 
 	public Page<Pessoa> findByNomeContaining(String nome, Pageable pageable);
+
+	public Page<Pessoa> findAll(Pageable pageable);
 	
 }
