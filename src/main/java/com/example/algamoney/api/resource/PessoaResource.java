@@ -29,59 +29,60 @@ import com.example.algamoney.api.service.PessoaService;
 @RestController
 @RequestMapping("/pessoas")
 public class PessoaResource {
-	
-	@Autowired 
+
+	@Autowired
 	private PessoaRepository pessoaRepository;
-	
-	@Autowired 
+
+	@Autowired
 	private PessoaService pessoaService;
-	
+
 	@Autowired
 	private ApplicationEventPublisher publisher;
-	
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
-	@GetMapping	
-	private Page<Pessoa> listar(Pageable pageable){
-		return pessoaRepository.findAll(pageable);
+
+	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA')")
+	public Page<Pessoa> pesquisar(@RequestParam(required = false, defaultValue = "%") String nome, Pageable pageable) {
+		return pessoaRepository.findByNomeContaining(nome, pageable);
 	}
-	
+
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
-	@GetMapping("/{codigo}")	
+	@GetMapping("/{codigo}")
 	public ResponseEntity<Pessoa> buscarPeloCodigo(@PathVariable Long codigo) {
 		Pessoa pessoa = pessoaRepository.findOne(codigo);
 		return pessoa != null ? ResponseEntity.ok().body(pessoa) : ResponseEntity.notFound().build();
 	}
-	
+
 	@GetMapping(params = "nome")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA')")
-	public Page<Pessoa> buscaPorNome(@RequestParam(required = false, defaultValue = "%") String nome, Pageable pageable) {
+	public Page<Pessoa> buscaPorNome(@RequestParam(required = false, defaultValue = "%") String nome,
+			Pageable pageable) {
 		return pessoaRepository.findByNomeContaining(nome, pageable);
 	}
-	
+
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('read','write')")
-	@PostMapping	
+	@PostMapping
 	public ResponseEntity<Pessoa> criar(@Valid @RequestBody Pessoa pessoa, HttpServletResponse response) {
 		Pessoa pessoaSalva = pessoaRepository.save(pessoa);
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getCodigo()));
-		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaSalva);		
+		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaSalva);
 	}
-	
+
 	@PreAuthorize("hasAuthority('ROLE_REMOVER_PESSOA') and #oauth2.hasScope('read','write')")
-	@DeleteMapping("/{codigo}") 	
+	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long codigo) {
 		pessoaRepository.delete(codigo);
 	}
-	
+
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('read','write')")
-	@PutMapping("/{codigo}")	
+	@PutMapping("/{codigo}")
 	public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo, @Valid @RequestBody Pessoa pessoa) {
 		Pessoa pessoaSalva = pessoaService.atualizar(codigo, pessoa);
 		return ResponseEntity.ok(pessoaSalva);
 	}
-	
+
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('read','write')")
-	@PutMapping("/{codigo}/ativo")	
+	@PutMapping("/{codigo}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
 		pessoaService.atualizarPropriedadeAtivo(codigo, ativo);
