@@ -45,12 +45,12 @@ public class PessoaResource {
 		return pessoaRepository.findByNomeContaining(nome, pageable);
 	}
 
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA')")
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Pessoa> buscarPeloCodigo(@PathVariable Long codigo) {
 		Pessoa pessoa = pessoaRepository.findOne(codigo);
 		return pessoa != null ? ResponseEntity.ok().body(pessoa) : ResponseEntity.notFound().build();
-	}
+	}	
 
 	@GetMapping(params = "nome")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA')")
@@ -59,7 +59,7 @@ public class PessoaResource {
 		return pessoaRepository.findByNomeContaining(nome, pageable);
 	}
 
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('read','write')")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA')")
 	@PostMapping
 	public ResponseEntity<Pessoa> criar(@Valid @RequestBody Pessoa pessoa, HttpServletResponse response) {
 		Pessoa pessoaSalva = pessoaRepository.save(pessoa);
@@ -67,21 +67,21 @@ public class PessoaResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaSalva);
 	}
 
-	@PreAuthorize("hasAuthority('ROLE_REMOVER_PESSOA') and #oauth2.hasScope('read','write')")
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_PESSOA')")
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long codigo) {
 		pessoaRepository.delete(codigo);
 	}
 
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('read','write')")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA')")
 	@PutMapping("/{codigo}")
 	public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo, @Valid @RequestBody Pessoa pessoa) {
 		Pessoa pessoaSalva = pessoaService.atualizar(codigo, pessoa);
 		return ResponseEntity.ok(pessoaSalva);
 	}
 
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('read','write')")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA')")
 	@PutMapping("/{codigo}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
