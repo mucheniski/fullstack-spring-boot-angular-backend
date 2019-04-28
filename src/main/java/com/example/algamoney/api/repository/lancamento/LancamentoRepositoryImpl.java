@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
 import com.example.algamoney.api.dto.LancamentoEstatisticaCategoria;
+import com.example.algamoney.api.dto.LancamentoEstatisticaDia;
 import com.example.algamoney.api.model.Categoria_;
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.model.Lancamento_;
@@ -121,6 +122,25 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 		criteriaQuery.groupBy(root.get(Lancamento_.categoria));		
 		
 		TypedQuery<LancamentoEstatisticaCategoria> typedQuery = manager.createQuery(criteriaQuery);
+		
+		return typedQuery.getResultList();
+	}
+	
+	@Override
+	public List<LancamentoEstatisticaDia> porDia(LocalDate mesReferencia) {
+		
+		CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+		CriteriaQuery<LancamentoEstatisticaDia> criteriaQuery = criteriaBuilder.createQuery(LancamentoEstatisticaDia.class);
+		Root<Lancamento> root = criteriaQuery.from(Lancamento.class);
+		
+		LocalDate primeiroDia = mesReferencia.withDayOfMonth(1);
+		LocalDate ultimoDia = mesReferencia.withDayOfMonth(mesReferencia.lengthOfMonth());
+		
+		criteriaQuery.select(criteriaBuilder.construct(LancamentoEstatisticaDia.class, root.get(Lancamento_.tipo), root.get(Lancamento_.dataVencimento), criteriaBuilder.sum(root.get(Lancamento_.valor))));		
+		criteriaQuery.where(criteriaBuilder.greaterThanOrEqualTo(root.get(Lancamento_.dataVencimento), primeiroDia), criteriaBuilder.lessThanOrEqualTo(root.get(Lancamento_.dataVencimento), ultimoDia));
+		criteriaQuery.groupBy(root.get(Lancamento_.tipo), root.get(Lancamento_.dataVencimento));		
+		
+		TypedQuery<LancamentoEstatisticaDia> typedQuery = manager.createQuery(criteriaQuery);
 		
 		return typedQuery.getResultList();
 	}
