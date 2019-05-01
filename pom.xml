@@ -116,6 +116,12 @@
             <artifactId>jasperreports-fonts</artifactId>
             <version>${jasperreports-fonts.version}</version>
         </dependency>
+        
+        <!-- Envio de email -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
 			
 	</dependencies>
 
