@@ -14,10 +14,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.example.algamoney.api.dto.LancamentoEstatisticaPessoa;
+import com.example.algamoney.api.mail.Mailer;
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.model.Pessoa;
+import com.example.algamoney.api.model.Usuario;
 import com.example.algamoney.api.repository.LancamentoRepository;
 import com.example.algamoney.api.repository.PessoaRepository;
+import com.example.algamoney.api.repository.UsuarioRepository;
 import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
 
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -33,6 +36,14 @@ public class LancamentoService {
 	
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
+	
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private Mailer mailer;
+	
+	private static final String PERMISSOES_DESTINATARIOS = "ROLE_PESQUISAR_LANCAMENTO";
 
 	public Lancamento salvar(Lancamento lancamento) {
 		Pessoa pessoa = pessoaRepository.findOne(lancamento.getPessoa().getCodigo());
@@ -86,9 +97,12 @@ public class LancamentoService {
 		return JasperExportManager.exportReportToPdf(jasperPrint);		
 	}
 	
-	@Scheduled(cron = "0 27 21 * * * ")
+	@Scheduled(cron = "0 0 6 * * * ") // Agendamento com cron para as 6 horas da manhã 
+	// @Scheduled(fixedDelay = (1000 * 60) * 30) //Exemplo de agendamento fixo
 	public void avisarSobreLancamentosVencidos() {
-		System.out.print("===================MÉTODO SENDO EXECUTADO=====================");
+		List<Lancamento> vencidos = lancamentoRepository.findByDataVencimentoLessThanEqualAndDataPagamentoIsNull(LocalDate.now());
+		List<Usuario> destinatarios = usuarioRepository.findByPermissoesDescricao(PERMISSOES_DESTINATARIOS);
+		mailer.avisarSobreLancamentosVencidos(vencidos, destinatarios);
 	}
 	
 	

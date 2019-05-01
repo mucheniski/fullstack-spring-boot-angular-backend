@@ -1,17 +1,15 @@
 package com.example.algamoney.api.mail;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -19,7 +17,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import com.example.algamoney.api.model.Lancamento;
-import com.example.algamoney.api.repository.LancamentoRepository;
+import com.example.algamoney.api.model.Usuario;
 
 @Component
 public class Mailer {
@@ -30,8 +28,8 @@ public class Mailer {
 	@Autowired
 	private TemplateEngine thymeleaf;
 	
-	@Autowired
-	private LancamentoRepository lancamentoRepository;
+//	@Autowired
+//	private LancamentoRepository lancamentoRepository;
 	
 	// Teste anvio de email simples
 //	@EventListener
@@ -54,6 +52,14 @@ public class Mailer {
 //		System.out.println("Terminado o envio de e-mail...");
 //	}
 	
+	public void avisarSobreLancamentosVencidos(List<Lancamento> vencidos, List<Usuario> destinatarios) {
+		Map<String, Object> variaveis = new HashMap<>();
+		variaveis.put("lancamentos", vencidos);		
+		List<String> emails = destinatarios.stream().map(usuario -> usuario.getEmail()).collect(Collectors.toList());		
+		this.enviarEmail("mucheniski.spring@gmail.com", emails, "Lançamentos Vencidos", "mail/aviso-lancamentos-vencidos", variaveis);
+	}
+	
+	// Envio de email simples
 	public void enviarEmail(String remetente, List<String> destinatarios, String assunto, String mensagem) {
 		try {
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -70,6 +76,7 @@ public class Mailer {
 		}
 	}
 	
+	// Envio de email com template HTML
 	public void enviarEmail(String remetente, List<String> destinatarios, String assunto, String template, Map<String, Object> variaveis) {
 		Context context = new Context(new Locale("pt", "BR"));
 		variaveis.entrySet().forEach(entry -> context.setVariable(entry.getKey(), entry.getValue()));
