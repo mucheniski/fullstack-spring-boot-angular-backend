@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -44,6 +46,8 @@ public class LancamentoService {
 	private Mailer mailer;
 	
 	private static final String PERMISSOES_DESTINATARIOS = "ROLE_PESQUISAR_LANCAMENTO";
+	
+	private static final Logger logger = LoggerFactory.getLogger(LancamentoService.class);
 
 	public Lancamento salvar(Lancamento lancamento) {
 		Pessoa pessoa = pessoaRepository.findOne(lancamento.getPessoa().getCodigo());
@@ -97,12 +101,29 @@ public class LancamentoService {
 		return JasperExportManager.exportReportToPdf(jasperPrint);		
 	}
 	
-	@Scheduled(cron = "0 0 6 * * * ") // Agendamento com cron para as 6 horas da manhã 
-	// @Scheduled(fixedDelay = (1000 * 60) * 30) //Exemplo de agendamento fixo
+//	@Scheduled(cron = "0 0 6 * * * ") // Agendamento com cron para as 6 horas da manhã 
+	@Scheduled(fixedDelay = (1000 * 60) * 30) //Exemplo de agendamento fixo
 	public void avisarSobreLancamentosVencidos() {
-		List<Lancamento> vencidos = lancamentoRepository.findByDataVencimentoLessThanEqualAndDataPagamentoIsNull(LocalDate.now());
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("Preparando envio de e-mails de aviso de lançamentos vencidos!");
+		}
+		
+		List<Lancamento> vencidos = lancamentoRepository.findByDataVencimentoLessThanEqualAndDataPagamentoIsNull(LocalDate.now());		
+		if (vencidos.isEmpty()) {
+			logger.info("Sem lançamentos vencidos para aviso!");
+			return;
+		}		
+		logger.info("Existem {} lançamentos vencidos", vencidos.size());
+		
 		List<Usuario> destinatarios = usuarioRepository.findByPermissoesDescricao(PERMISSOES_DESTINATARIOS);
+		if (destinatarios.isEmpty()) {
+			logger.warn("Exitem lançamentos vencidos porém não há destinatários para o e-mail");
+			return;
+		}
+		
 		mailer.avisarSobreLancamentosVencidos(vencidos, destinatarios);
+		logger.info("Envio de aviso de lançamentos concluído com sucesso!");
 	}
 	
 	
