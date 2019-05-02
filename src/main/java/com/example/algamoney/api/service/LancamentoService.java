@@ -102,7 +102,7 @@ public class LancamentoService {
 	}
 	
 //	@Scheduled(cron = "0 0 6 * * * ") // Agendamento com cron para as 6 horas da manhã 
-	@Scheduled(fixedDelay = (1000 * 60) * 30) //Exemplo de agendamento fixo
+//	@Scheduled(fixedDelay = (1000 * 60) * 30) //Exemplo de agendamento fixo
 	public void avisarSobreLancamentosVencidos() {
 		
 		if (logger.isDebugEnabled()) {
