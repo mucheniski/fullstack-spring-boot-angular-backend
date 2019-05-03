@@ -75,6 +75,14 @@ public class Pessoa {
 	@Transient
 	public boolean isInativo() {
 		return !this.ativo;
+	}	
+
+	public List<Contato> getContatos() {
+		return contatos;
+	}
+
+	public void setContatos(List<Contato> contatos) {
+		this.contatos = contatos;
 	}
 
 	@Override

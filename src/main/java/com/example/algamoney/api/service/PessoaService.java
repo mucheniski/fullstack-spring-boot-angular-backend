@@ -13,9 +13,15 @@ public class PessoaService {
 	
 	@Autowired
 	PessoaRepository pessoaRepository;
+	
+	public Pessoa salvar(Pessoa pessoa) {
+		pessoa.getContatos().forEach(contato -> contato.setPessoa(pessoa));
+		return pessoaRepository.save(pessoa);
+	}
 
 	public Pessoa atualizar(Long codigo, Pessoa pessoa) {
 		Pessoa pessoaSalva = buscarPessoaPeloCodigo(codigo);
+		pessoa.getContatos().forEach(contato -> contato.setPessoa(pessoa));
 		BeanUtils.copyProperties(pessoa, pessoaSalva, "codigo");
 		return pessoaRepository.save(pessoaSalva);
 	}
