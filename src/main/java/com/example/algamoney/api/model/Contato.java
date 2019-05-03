@@ -1,5 +1,6 @@
 package com.example.algamoney.api.model;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -8,16 +9,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+@Entity
 @Table(name = "contato")
 public class Contato {
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
@@ -31,11 +29,10 @@ public class Contato {
 	
 	@NotEmpty
 	private String telefone;
-	 	
+	
+	@NotNull
 	@ManyToOne
-    @JoinColumn(name = "codigo_pessoa", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+	@JoinColumn(name = "codigo_pessoa")
 	private Pessoa pessoa;
 
 	public Long getCodigo() {
@@ -102,5 +99,4 @@ public class Contato {
 			return false;
 		return true;
 	}
-	
 }
