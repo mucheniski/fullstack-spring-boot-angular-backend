@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 import com.example.algamoney.api.config.property.AlgamoneyApiProperty;
 
-@SpringBootApplication
+@SpringBootApplication 
 @EnableConfigurationProperties(AlgamoneyApiProperty.class)
 public class AlgamoneyApiApplication { 
 
