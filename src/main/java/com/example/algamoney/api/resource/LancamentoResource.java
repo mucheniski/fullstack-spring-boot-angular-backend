@@ -136,6 +136,7 @@ public class LancamentoResource {
 	@PostMapping("/anexo")
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
 	public String uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
+		// TODO vincular o arquivo ao lancamento exemplo https://www.callicoder.com/spring-boot-file-upload-download-jpa-hibernate-mysql-database-example/
 		OutputStream outputStream = new FileOutputStream("/home/mucheniski/Desktop/anexo--" + anexo.getOriginalFilename());
 		outputStream.write(anexo.getBytes());
 		outputStream.close();
