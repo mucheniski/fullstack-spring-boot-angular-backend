@@ -32,7 +32,7 @@ public class CidadeResource {
 	
 	@GetMapping("/estado/{codigo}")	
 	public List<Cidade> buscarPorEstado(@PathVariable Long codigo) {
-		return cidadeRepository.findByEstadoCodigo(codigo);		
+		return cidadeRepository.findByEstadoCodigo(codigo);		 
 	}
 
 
