@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -77,8 +78,8 @@ public class LancamentoResource {
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Lancamento> buscarPeloCodigo(@PathVariable Long codigo) {
-		Lancamento lancamento = lancamentoRepository.findOne(codigo);
-		return lancamento != null ? ResponseEntity.ok().body(lancamento) : ResponseEntity.notFound().build();
+		Optional<Lancamento> lancamento = lancamentoRepository.findById(codigo);
+		return lancamento.isPresent() ? ResponseEntity.ok().body(lancamento.get()) : ResponseEntity.notFound().build();
 	}
 	
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
@@ -115,7 +116,7 @@ public class LancamentoResource {
 	@DeleteMapping("/{codigo}") 
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long codigo) {
-		lancamentoRepository.delete(codigo);
+		lancamentoRepository.deleteById(codigo);
 	}
 	
 	@ExceptionHandler({ PessoaInexistenteOuInativaException.class })

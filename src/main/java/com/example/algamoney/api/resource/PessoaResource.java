@@ -1,5 +1,7 @@
 package com.example.algamoney.api.resource;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -48,8 +50,8 @@ public class PessoaResource {
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA')")
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Pessoa> buscarPeloCodigo(@PathVariable Long codigo) {
-		Pessoa pessoa = pessoaRepository.findOne(codigo);
-		return pessoa != null ? ResponseEntity.ok().body(pessoa) : ResponseEntity.notFound().build();
+		Optional<Pessoa> pessoa = pessoaRepository.findById(codigo);
+		return pessoa.isPresent() ? ResponseEntity.ok().body(pessoa.get()) : ResponseEntity.notFound().build();
 	}	
 
 	@GetMapping(params = "nome")
@@ -71,7 +73,7 @@ public class PessoaResource {
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long codigo) {
-		pessoaRepository.delete(codigo);
+		pessoaRepository.deleteById(codigo);
 	}
 
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA')")

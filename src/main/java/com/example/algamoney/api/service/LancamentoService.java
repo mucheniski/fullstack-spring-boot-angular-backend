@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.example.algamoney.api.dto.LancamentoEstatisticaPessoa;
@@ -50,8 +50,8 @@ public class LancamentoService {
 	private static final Logger logger = LoggerFactory.getLogger(LancamentoService.class);
 
 	public Lancamento salvar(Lancamento lancamento) {
-		Pessoa pessoa = pessoaRepository.findOne(lancamento.getPessoa().getCodigo());
-		if (pessoa == null || pessoa.isInativo()) {
+		Optional<Pessoa> pessoa = pessoaRepository.findById(lancamento.getPessoa().getCodigo());
+		if (!pessoa.isPresent() || pessoa.get().isInativo()) {
 			throw new PessoaInexistenteOuInativaException();
 		}
 		
@@ -70,22 +70,22 @@ public class LancamentoService {
 	}
 
 	private void validarPessoa(Lancamento lancamento) {
-		Pessoa pessoa = null;
+		Optional<Pessoa> pessoa = null;
 		if (lancamento.getPessoa().getCodigo() != null) {
-			pessoa = pessoaRepository.findOne(lancamento.getPessoa().getCodigo());
+			pessoa = pessoaRepository.findById(lancamento.getPessoa().getCodigo());
 		}
 
-		if (pessoa == null || pessoa.isInativo()) {
+		if (!pessoa.isPresent() || pessoa.get().isInativo()) {
 			throw new PessoaInexistenteOuInativaException();
 		}
 	}
 
 	private Lancamento buscarLancamentoExistente(Long codigo) {
-		Lancamento lancamentoSalvo = lancamentoRepository.findOne(codigo);
-		if (lancamentoSalvo == null) {
+		Optional<Lancamento> lancamentoSalvo = lancamentoRepository.findById(codigo);
+		if (!lancamentoSalvo.isPresent()) {
 			throw new IllegalArgumentException();
 		}
-		return lancamentoSalvo;
+		return lancamentoSalvo.get();
 	}
 	
 	public byte[] relatorioPorPessoa(LocalDate inicio, LocalDate fim) throws Exception {

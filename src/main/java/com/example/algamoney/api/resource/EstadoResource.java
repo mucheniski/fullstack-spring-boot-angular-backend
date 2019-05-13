@@ -1,6 +1,7 @@
 package com.example.algamoney.api.resource;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,8 @@ public class EstadoResource {
 	
 	@GetMapping("/{codigo}")	
 	public ResponseEntity<Estado> buscarPeloCodigo(@PathVariable Long codigo) {
-		Estado estado = estadoRepository.findOne(codigo);
-		return estado != null ? ResponseEntity.ok().body(estado) : ResponseEntity.notFound().build(); 
+		Optional<Estado> estado = estadoRepository.findById(codigo);
+		return estado.isPresent() ? ResponseEntity.ok().body(estado.get()) : ResponseEntity.notFound().build(); 
 	}
 
 
